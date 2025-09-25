@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "name": "g09_cajes_raechelleanne_block_8",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raechelleannecajes-rgb/F09_RaechelleAnne_Cajes_IT_Elect1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/raechelleannecajes-rgb/F09_RaechelleAnne_Cajes_IT_Elect1/issues"
+  },
+  "homepage": "https://github.com/raechelleannecajes-rgb/F09_RaechelleAnne_Cajes_IT_Elect1#readme"
+}
