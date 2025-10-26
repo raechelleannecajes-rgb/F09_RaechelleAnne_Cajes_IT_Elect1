@@ -1,4 +1,4 @@
-import MessengerAndCommentApp from "./screens/MessengerAndCommentApp";
+import MessengerAndCommentApp from "MessengerAndCommentApp";
 
 export default function App() {
   return <MessengerAndCommentApp />;
