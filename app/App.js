@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import ColorChangerApp from 'ColorChangerApp';
-import CounterApp from 'CounterApp';
+import ColorChangerApp from './ColorChangerApp';
+import CounterApp from './CounterApp';
 
 export default function App() {
   return (
