@@ -53,7 +53,7 @@ export default function MessengerAndCommentApp() {
     >
       {!item.isMe && (
         <Image
-          source={require("../../assets/HeaderPic.jpg")} // 💬 other avatar
+          source={require("../assets/HeaderPic.jpg")} // 💬 other avatar
           style={styles.avatar}
         />
       )}
@@ -68,7 +68,7 @@ export default function MessengerAndCommentApp() {
       </View>
       {item.isMe && (
         <Image
-          source={require("../../assets/Avatar.jpg")} // 💬 your avatar
+          source={require("../assets/Avatar.jpg")} // 💬 your avatar
           style={[styles.avatar, { marginLeft: 8 }]}
         />
       )}
@@ -87,7 +87,7 @@ export default function MessengerAndCommentApp() {
           <View style={styles.headerLeft}>
             <Ionicons name="arrow-back" size={24} color="#fff" />
             <Image
-              source={require("../../assets/HeaderPic.jpg")}
+              source={require("../assets/HeaderPic.jpg")}
               style={styles.headerImage}
             />
             <View>

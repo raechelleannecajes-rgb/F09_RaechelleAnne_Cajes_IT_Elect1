@@ -1,4 +1,4 @@
-import MessengerAndCommentApp from "MessengerAndCommentApp";
+import MessengerAndCommentApp from "./MessengerAndCommentApp";
 
 export default function App() {
   return <MessengerAndCommentApp />;
