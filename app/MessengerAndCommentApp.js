@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   FlatList,
   Image,
@@ -9,12 +9,31 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 export default function MessengerAndCommentApp() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const flatListRef = useRef(null);
+
+  // 🗨️ Random replies list
+  const autoReplies = [
+    "Oh really? 😄",
+    "That sounds nice!",
+    "I totally agree with you 💬",
+    "You're funny 😂",
+    "Hmm, interesting thought 🤔",
+    "I missed chatting with you 🥺",
+    "Wait, say that again? 👀",
+    "I’m proud of you ❤️",
+    "Haha okay okay 😅",
+    "Aww, you’re so sweet 💕",
+    "That’s amazing! 🌟",
+    "I didn’t know that 😮",
+    "Tell me more!",
+    "You always make me smile 😊",
+  ];
 
   const sendMessage = () => {
     if (input.trim().length === 0) return;
@@ -26,37 +45,50 @@ export default function MessengerAndCommentApp() {
       time: "Now",
       isMe: true,
     };
+
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
 
-    // Simulate auto-reply from other user after 1.5 seconds
+    // Scroll to bottom after sending
     setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+
+    // 🧠 Generate random reply
+    setTimeout(() => {
+      const randomIndex = Math.floor(Math.random() * autoReplies.length);
+      const replyText = autoReplies[randomIndex];
+
       const reply = {
         id: (Date.now() + 1).toString(),
         sender: "GAIA ❤️",
-        text: "Okay noted 😄",
-        text: "thanks",
-        text: "YOU ARE beautiful.",
+        text: replyText,
         time: "Now",
         isMe: false,
       };
       setMessages((prev) => [...prev, reply]);
-    }, 1500);
+
+      // Scroll again for new message
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }, 1200);
   };
 
   const renderItem = ({ item }) => (
     <View
       style={[
-        styles.messageContainer,
-        item.isMe ? styles.rightMessage : styles.leftMessage,
+        styles.messageRow,
+        item.isMe ? styles.rightAlign : styles.leftAlign,
       ]}
     >
       {!item.isMe && (
         <Image
-          source={require("../assets/HeaderPic.jpg")} // 💬 other avatar
+          source={require("../assets/HeaderPic.jpg")}
           style={styles.avatar}
         />
       )}
+
       <View
         style={[
           styles.bubble,
@@ -66,10 +98,11 @@ export default function MessengerAndCommentApp() {
         <Text style={styles.messageText}>{item.text}</Text>
         <Text style={styles.timeText}>{item.time}</Text>
       </View>
+
       {item.isMe && (
         <Image
-          source={require("../assets/Avatar.jpg")} // 💬 your avatar
-          style={[styles.avatar, { marginLeft: 8 }]}
+          source={require("../assets/Avatar.jpg")}
+          style={[styles.avatar, { marginLeft: 6 }]}
         />
       )}
     </View>
@@ -79,28 +112,27 @@ export default function MessengerAndCommentApp() {
     <KeyboardAvoidingView
       style={styles.outerContainer}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
     >
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color="#e5e9ec" />
             <Image
               source={require("../assets/HeaderPic.jpg")}
               style={styles.headerImage}
             />
             <View>
               <Text style={styles.headerName}>GAIA ❤️</Text>
-              <Text style={styles.activeText}>Active 6 minutes ago</Text>
+              <Text style={styles.activeText}>Online</Text>
             </View>
           </View>
           <View style={styles.headerIcons}>
-            <Ionicons name="call-outline" size={22} color="#fff" />
+            <Ionicons name="call-outline" size={22} color="#e5e9ec" />
             <Ionicons
               name="videocam-outline"
               size={22}
-              color="#fff"
+              color="#e5e9ec"
               style={{ marginLeft: 15 }}
             />
           </View>
@@ -114,10 +146,16 @@ export default function MessengerAndCommentApp() {
             </View>
           ) : (
             <FlatList
+              ref={flatListRef}
               data={messages}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
               style={styles.chatArea}
+              contentContainerStyle={{ paddingBottom: 10 }}
+              showsVerticalScrollIndicator={false}
+              onContentSizeChange={() =>
+                flatListRef.current?.scrollToEnd({ animated: true })
+              }
             />
           )}
         </View>
@@ -126,13 +164,13 @@ export default function MessengerAndCommentApp() {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Message..."
-            placeholderTextColor="#aaa"
+            placeholder="Type a message..."
+            placeholderTextColor="#999"
             value={input}
             onChangeText={setInput}
           />
           <TouchableOpacity onPress={sendMessage}>
-            <Ionicons name="send" size={24} color="#1E90FF" />
+            <Ionicons name="send" size={26} color="#78A9FF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -143,68 +181,72 @@ export default function MessengerAndCommentApp() {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: "gray",
+    backgroundColor: "#1e293b",
     alignItems: "center",
-  justifyContent: "center",
+    justifyContent: "center",
   },
   container: {
-    width: "98%",
-    height: "90%", 
-    backgroundColor: "gray",
+    width: "95%",
+    height: "95%",
+    backgroundColor: "#2b3b52",
     borderRadius: 20,
     overflow: "hidden",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
   },
 
-  // HEADER
+  // Header
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "gray",
+    backgroundColor: "#334155",
     padding: 10,
   },
   headerLeft: { flexDirection: "row", alignItems: "center" },
-  headerImage: { width: 35, height: 35, borderRadius: 20, marginHorizontal: 8 },
+  headerImage: { width: 38, height: 38, borderRadius: 20, marginHorizontal: 8 },
   headerName: { color: "#fff", fontWeight: "bold", fontSize: 16 },
   activeText: { color: "#b0bec5", fontSize: 12 },
   headerIcons: { flexDirection: "row" },
 
-  // CHAT BOX
+  // Chat area
   chatContainer: {
     flex: 1,
-    backgroundColor: "gray",
-    margin: 10,
+    backgroundColor: "#2b3b52",
+    margin: 8,
     borderRadius: 15,
     padding: 5,
   },
   chatArea: { flex: 1 },
-  messageContainer: {
+  messageRow: {
     flexDirection: "row",
-    marginVertical: 5,
+    marginVertical: 6,
     alignItems: "flex-end",
   },
-  leftMessage: { justifyContent: "flex-start" },
-  rightMessage: {
-    justifyContent: "flex-end",
-    alignSelf: "flex-end",
-    flexDirection: "row-reverse",
-  },
-  avatar: { width: 35, height: 35, borderRadius: 20 },
+  leftAlign: { alignSelf: "flex-start" },
+  rightAlign: { alignSelf: "flex-end", flexDirection: "row-reverse" },
+  avatar: { width: 36, height: 36, borderRadius: 20 },
   bubble: {
     maxWidth: "70%",
     padding: 10,
     borderRadius: 15,
   },
   myBubble: {
-    backgroundColor: "#006AFF",
+    backgroundColor: "#4e9cff",
     borderTopRightRadius: 0,
   },
   otherBubble: {
-    backgroundColor: "#263645",
+    backgroundColor: "#475569",
     borderTopLeftRadius: 0,
   },
   messageText: { color: "#fff", fontSize: 15 },
-  timeText: { color: "#ccc", fontSize: 10, marginTop: 3, alignSelf: "flex-end" },
+  timeText: {
+    color: "#cbd5e1",
+    fontSize: 10,
+    marginTop: 3,
+    alignSelf: "flex-end",
+  },
 
   emptyChat: {
     flex: 1,
@@ -212,25 +254,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   emptyText: {
-    color: "#999",
+    color: "#94a3b8",
     fontSize: 14,
   },
 
-  // INPUT BAR
+  // Input bar
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "gray",
+    backgroundColor: "#334155",
     padding: 10,
     borderTopWidth: 1,
-    borderColor: "gray",
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+    borderColor: "#475569",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   input: {
     flex: 1,
     color: "#fff",
-    backgroundColor: "#2a3b4d",
+    backgroundColor: "#1e293b",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
