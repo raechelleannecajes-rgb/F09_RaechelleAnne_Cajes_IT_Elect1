@@ -124,7 +124,7 @@ export default function MessengerAndCommentApp() {
             />
             <View>
               <Text style={styles.headerName}>GAIA ❤️</Text>
-              <Text style={styles.activeText}>Active 6 minutes ago</Text>
+              <Text style={styles.activeText}>Online</Text>
             </View>
           </View>
           <View style={styles.headerIcons}>
